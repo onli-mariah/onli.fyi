@@ -15,13 +15,29 @@ export function TableOfContents({ contentDependency }: Props) {
   const [items, setItems] = useState<TOCItem[]>([]);
   const [activeId, setActiveId] = useState<string>('');
   const [hasCalculator, setHasCalculator] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Trigger collapse when scrolling down past 300px
+      setIsScrolled(window.scrollY > 300);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    // Initial check
+    handleScroll();
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     if (!contentDependency) return;
 
     // Use a small timeout to ensure the DOM has rendered the markdown elements
     const timer = setTimeout(() => {
-      const headings = Array.from(document.querySelectorAll('article h2, article h3'));
+      const headings = Array.from(document.querySelectorAll('main h2, main h3, article h2, article h3'));
       const calcSection = document.getElementById('calculator');
       
       setHasCalculator(!!calcSection);
@@ -80,61 +96,44 @@ export function TableOfContents({ contentDependency }: Props) {
     }
   };
 
+  const isCollapsed = isScrolled && !isHovered;
+
   return (
     <aside style={{ 
       position: 'sticky', 
       top: 'calc(var(--navbar-height) + var(--spacing-md))', 
-      width: '200px', 
+      width: '220px', /* Match expanded toc-container width */
       flexShrink: 0,
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '4px'
-    }} className="hidden md:flex">
-      <h3 style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '16px' }}>
-        In This Article
-      </h3>
+      zIndex: 40 // Ensure hover expansion goes over other elements if needed
+    }} className="hidden md:block group" 
+       onMouseEnter={() => setIsHovered(true)}
+       onMouseLeave={() => setIsHovered(false)}>
       
-      {items.map((item) => (
-        <button
-          key={item.id}
-          onClick={() => scrollToElement(item.element)}
-          style={{
-            textAlign: 'left',
-            background: 'none',
-            border: 'none',
-            padding: `8px 12px 8px ${item.level === 3 ? '24px' : '12px'}`,
-            borderLeft: `2px solid ${activeId === item.id ? 'var(--text-dark)' : 'transparent'}`,
-            color: activeId === item.id ? 'var(--text-dark)' : 'var(--text-muted)',
-            cursor: 'pointer',
-            fontSize: '0.95rem',
-            transition: 'all 0.2s ease',
-            fontWeight: activeId === item.id ? 500 : 400,
-          }}
-        >
-          {item.title}
-        </button>
-      ))}
+      <div className={`toc-container ${isCollapsed ? 'collapsed' : ''}`}>
+        <h3 className="toc-header">
+          In This Article
+        </h3>
+        
+        {items.map((item) => (
+          <button
+            key={item.id}
+            onClick={() => scrollToElement(item.element)}
+            className={`toc-item ${item.level === 3 ? 'level-3' : ''} ${activeId === item.id ? 'active' : ''}`}
+          >
+            <span>{item.title}</span>
+          </button>
+        ))}
 
-      {hasCalculator && (
-        <button
-          onClick={() => scrollToElement(document.getElementById('calculator'))}
-          style={{
-            textAlign: 'left',
-            background: 'none',
-            border: 'none',
-            padding: '8px 12px 8px 12px',
-            borderLeft: `2px solid ${activeId === 'calculator' ? 'var(--text-dark)' : 'transparent'}`,
-            color: activeId === 'calculator' ? 'var(--text-dark)' : 'var(--text-muted)',
-            cursor: 'pointer',
-            fontSize: '0.95rem',
-            transition: 'all 0.2s ease',
-            fontWeight: activeId === 'calculator' ? 500 : 400,
-            marginTop: '8px'
-          }}
-        >
-          Interactive Calculator
-        </button>
-      )}
+        {hasCalculator && (
+          <button
+            onClick={() => scrollToElement(document.getElementById('calculator'))}
+            className={`toc-item ${activeId === 'calculator' ? 'active' : ''}`}
+            style={{ marginTop: '8px' }}
+          >
+            <span>Interactive Calculator</span>
+          </button>
+        )}
+      </div>
 
     </aside>
   );
