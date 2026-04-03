@@ -10,6 +10,10 @@ import { DataPrivacy } from './pages/DataPrivacy';
 import { Finance } from './pages/Finance';
 import { Marketplaces } from './pages/Marketplaces';
 import { UseCasesDirectory } from './pages/UseCasesDirectory';
+import { TheOnliWayLanding } from './pages/TheOnliWayLanding';
+import { TheMarket } from './pages/TheMarket';
+import { TheValue } from './pages/TheValue';
+import { TheProof } from './pages/TheProof';
 
 function App() {
   return (
@@ -25,6 +29,10 @@ function App() {
           <Route path="/finance" element={<Finance />} />
           <Route path="/marketplaces" element={<Marketplaces />} />
           <Route path="/use-cases" element={<UseCasesDirectory />} />
+          <Route path="/the-onli-way" element={<TheOnliWayLanding />} />
+          <Route path="/the-market" element={<TheMarket />} />
+          <Route path="/the-value" element={<TheValue />} />
+          <Route path="/the-proof" element={<TheProof />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -10,6 +10,12 @@ const MEGA_MENU_ITEMS = [
   { title: "Marketplaces", desc: "Next-Gen Marketplaces", anchor: "/marketplaces" }
 ];
 
+const ONLI_WAY_MENU_ITEMS = [
+  { title: "The Market", desc: "A quantified analysis of the seven verticals", anchor: "/the-market" },
+  { title: "The Value", desc: "A precise mathematical analysis of what Onli saves", anchor: "/the-value" },
+  { title: "The Proof", desc: "The full Total Cost of Ownership comparison", anchor: "/the-proof" }
+];
+
 export const Navbar = () => {
   return (
     <header style={{
@@ -34,6 +40,18 @@ export const Navbar = () => {
             <Link to="/use-cases" className="nav-link">Use Cases</Link>
             <div className="mega-menu-content">
               {MEGA_MENU_ITEMS.map((item, idx) => (
+                <Link key={idx} to={item.anchor} className="mega-menu-item">
+                  <span className="mega-menu-item-title">{item.title}</span>
+                  <span className="mega-menu-item-desc">{item.desc}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div className="mega-menu-wrapper">
+            <Link to="/the-onli-way" className="nav-link">The Onli Way</Link>
+            <div className="mega-menu-content">
+              {ONLI_WAY_MENU_ITEMS.map((item, idx) => (
                 <Link key={idx} to={item.anchor} className="mega-menu-item">
                   <span className="mega-menu-item-title">{item.title}</span>
                   <span className="mega-menu-item-desc">{item.desc}</span>
