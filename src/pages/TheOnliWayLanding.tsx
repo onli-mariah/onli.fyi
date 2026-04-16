@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { UseCaseArticle } from '../components/UseCaseArticle';
 
 const ONLI_WAY_PAGES = [
@@ -75,9 +76,9 @@ export function TheOnliWayLanding() {
             The Onli Way Pages
           </h3>
           {ONLI_WAY_PAGES.map((page) => (
-            <a
+            <Link
               key={page.id}
-              href={page.link}
+              to={page.link}
               style={{
                 padding: '8px 12px',
                 borderLeft: `2px solid transparent`,
@@ -97,7 +98,7 @@ export function TheOnliWayLanding() {
               }}
             >
               {page.title}
-            </a>
+            </Link>
           ))}
         </aside>
 
